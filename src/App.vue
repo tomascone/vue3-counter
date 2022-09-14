@@ -1,47 +1,83 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref, computed } from "vue";
+
+const name = "Vue 3";
+
+// counter ahora es una variable reactiva
+const counter = ref(0);
+const arrNum = ref([]);
+
+const increment = () => {
+  // mutamos el valor a través de .value
+  counter.value++;
+};
+
+const decrement = () => {
+  // mutamos el valor a través de .value
+  counter.value--;
+};
+
+const restart = () => {
+  // mutamos el valor a través de .value
+  counter.value = 0;
+};
+
+const add = () => {
+  // mutamos el valor a través de .value
+  arrNum.value.push(counter.value);
+};
+
+const classCounter = computed(() => {
+  if (counter.value === 0) {
+    return 'zero'
+  }
+  if (counter.value > 0) {
+    return 'positive'
+  }
+  if (counter.value < 0) {
+    return 'negative'
+  }
+})
+
+const btnAdd = computed(() => {
+  const numSearch = arrNum.value.find(num => num === counter.value);
+
+  return numSearch || numSearch === 0;
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div class="container">
+    <h1>Hi {{ name }}!</h1>
+    <h2 :class="classCounter">
+      {{ counter }}
+    </h2>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div class="btn-group">
+      <button class="btn btn-success" @click="increment">Click incremet</button>
+      <button class="btn btn-danger" @click="decrement">Click decrement</button>
+      <button class="btn btn-secondary" @click="restart">Click restart</button>
+      <button class="btn btn-primary" @click="add" :disabled="btnAdd">
+        Add
+      </button>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+    
+    <ul class="list-group mt-4">
+      <li class="list-group-item" v-for="(num, index) in arrNum" :key="index">
+        {{ num }}
+      </li>
+    </ul>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+<style>
+  .negative {
+    color: red;
   }
-
-  .logo {
-    margin: 0 2rem 0 0;
+  .positive {
+    color: green;
   }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+  .zero {
+    color: peru;
   }
-}
 </style>
